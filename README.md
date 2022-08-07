@@ -79,11 +79,15 @@ firewall-cmd --list-services
 ```
 puppetserver ca list --all
 puppetserver ca sign --all
+
 # or sign individually
+puppetserver ca sign deployserver.local
+puppetserver ca sign puppet-client1.local
+
 
 # clear existing certs
-puppetserver ca clean --certname deployserver.localdomain
-puppetserver ca clean --certname puppet-client1.localdomain
+puppetserver ca clean --certname deployserver.local
+puppetserver ca clean --certname puppet-client1.local
 
 
 ```

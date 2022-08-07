@@ -1,0 +1,13 @@
+CPUS="2"
+MEMORY="4024"
+
+Vagrant.configure("2") do |config|
+  config.vm.define :puppetserver do |puppetserver|
+    puppetserver.vm.box = "roboxes/centos8s"
+    puppetserver.vm.provider :libvirt do |domain|
+          domain.memory = MEMORY
+          domain.cpus = CPUS
+    end
+  end
+
+end

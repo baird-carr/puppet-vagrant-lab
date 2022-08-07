@@ -1,0 +1,13 @@
+CPUS="1"
+MEMORY="1024"
+
+Vagrant.configure("2") do |config|
+  config.vm.define :deployserver do |deployserver|
+    deployserver.vm.box = "roboxes/centos8s"
+    deployserver.vm.provider :libvirt do |domain|
+          domain.memory = MEMORY
+          domain.cpus = CPUS
+    end
+  end
+
+end

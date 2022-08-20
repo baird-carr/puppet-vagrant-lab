@@ -40,6 +40,12 @@ ex:
 192.168.121.109  puppet-client1 puppet-client1.local
 192.168.121.118  deployserver deployserver.local
 ```
+oldline=$(grep puppet-master /shared/hosts)
+newline="$(hostname -I)  $(hostname) $(hostname).local"
+sed -i -e "s/${oldline}/${HostsLine}/g" /shared/hosts
+
+
+```
 
 ### Configure firewall on puppet-server
 
@@ -47,7 +53,7 @@ ex:
 firewall-cmd --permanent --new-service=puppet
 firewall-cmd --permanent --service=puppet --add-port=8140/tcp
 firewall-cmd --permanent --service=puppet --add-port=8140/udp
-firewall-cmd --add-service puppet
+firewall-cmd --permanent --add-service puppet
 firewall-cmd --reload
 firewall-cmd --list-services
 ```
@@ -58,8 +64,8 @@ firewall-cmd --list-services
 
 ### Install Puppet Repos on Server and Nodes
 
-- yum localinstall https://yum.puppetlabs.com/puppet-release-el-8.noarch.rpm
-- yum localinstall https://yum.puppetlabs.com/puppet-tools-release-el-8.noarch.rpm
+- yum -y localinstall https://yum.puppetlabs.com/puppet-release-el-8.noarch.rpm
+- yum -y localinstall https://yum.puppetlabs.com/puppet-tools-release-el-8.noarch.rpm
 
 ### Install puppetserver
 - yum install puppetserver
@@ -72,8 +78,21 @@ firewall-cmd --list-services
 
 ### Start and enable services
 
+```
+#puppetserver
+systemctl enable puppetserver
+systemctl start puppetserver
+
+#server and clients
+systemctl enable puppet
+systemctl start puppet
+```
+
 ### Run puppet agent on clients to generate certs
-- sudo /opt/puppetlabs/puppet/bin/puppet agent -tv --server=puppet-server.local
+- sudo puppet agent -tv --server=puppet-master.local
+### Will probably need to run. Won't run with sudo?:
+- puppet agent -tv
+
 
 ### Sign client certs on puppetserver
 ```

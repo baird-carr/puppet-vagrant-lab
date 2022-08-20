@@ -9,5 +9,34 @@ Vagrant.configure("2") do |config|
           domain.cpus = CPUS
     end
   end
+  config.vm.hostname = "puppet-master"
+  config.vm.provision "shell", inline: <<-SHELL
+  sed -i 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/g' /etc/ssh/sshd_config
+  sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+  systemctl restart sshd
+  yum install -y nfs-utils
+  mkdir /shared
+  mount -t nfs 192.168.122.1:/home/shared /shared
+  echo "" >> /etc/fstab
+  echo "192.168.122.1:/home/shared /shared nfs defaults 0  0" >> /etc/fstab
+  echo "$(hostname -I)  $(hostname) $(hostname).local puppet" > /shared/puppet-master.host
+  yum -y localinstall https://yum.puppetlabs.com/puppet-release-el-8.noarch.rpm
+  yum -y localinstall https://yum.puppetlabs.com/puppet-tools-release-el-8.noarch.rpm
+  firewall-cmd --permanent --new-service=puppet
+  firewall-cmd --permanent --service=puppet --add-port=8140/tcp
+  firewall-cmd --permanent --service=puppet --add-port=8140/udp
+  firewall-cmd --permanent --add-service puppet
+  firewall-cmd --reload
+  ##Install puppetserver
+  yum install -y puppetserver
+  ##configure puppetserver
+  sed -i 's/-Xms2g -Xmx2g/-Xms3g -Xmx3g/g' /etc/sysconfig/puppetserver
+  systemctl enable puppetserver
+  systemctl start puppetserver
+  ##End Puppet-Master
+  #yum install -y puppet
+  systemctl enable puppet
+  systemctl start puppet
+  SHELL
 
 end

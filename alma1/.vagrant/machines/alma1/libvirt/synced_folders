@@ -1,1 +1,0 @@
-{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"/home/baird/Documents/Git_Storage/mytraining/Puppet/puppet-lab/alma1","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}}}

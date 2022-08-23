@@ -1,4 +1,9 @@
 <<<<<<< HEAD
+
+# Change VM Provider:
+
+https://www.vagrantup.com/docs/providers/basic_usage
+
 # puppet-vagrant-lab
 =======
 # Install and Configure Puppet Server and Client nodes for Training
